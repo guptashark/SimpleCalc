@@ -7,7 +7,12 @@
 using namespace std;
 
 int fn_div(int a, int b) {
-	return a / b;
+	if(b == 0) {
+		cout << "Error: Second argument of division cannot be 0." << endl;
+		return 0;
+	} else {
+		return a / b;
+	}
 }
 
 int fn_mult(int a, int b) {
@@ -19,7 +24,7 @@ int fn_add(int a, int b) {
 }
 
 int fn_sub(int a, int b) {
-	return a + b;
+	return a - b;
 }
 
 void show_help(map<string, int (*)(int, int)> &f) {

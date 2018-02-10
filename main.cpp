@@ -47,8 +47,14 @@ int main(void) {
 		string token;
 		while(ss >> token) token_list.push_back(token);
 
-		for(auto i = token_list.begin(); i != token_list.end(); i++) {
-			cout << *i << endl;
+		string oper = *(token_list.begin());
+		if(functions.find(oper) == functions.end()) {
+			cout << "Error: " << oper << " ";
+			cout << " is not a defined function." << endl;
+		} else {
+			int arg1 = stoi(token_list[1]);
+			int arg2 = stoi(token_list[2]);
+			cout << functions[oper](arg1, arg2) << endl;
 		}
 	}
 

@@ -34,15 +34,20 @@ int main(void) {
 	cout << "Simple Calculator" << endl;
 	cout << "Version 1.0" << endl;
 
-	bool quit_signal = false;
 
-	while(! quit_signal) {
+	while(true) {
 	
 		cout << "~> ";	
 		string user_input;
 		getline(cin, user_input);
-		stringstream ss(user_input);
 
+		if(user_input == "quit") break;
+		if(user_input.empty()) {
+			cout << endl;
+			break;
+		}
+		
+		stringstream ss(user_input);
 		vector<string> token_list;
 		string token;
 		while(ss >> token) token_list.push_back(token);

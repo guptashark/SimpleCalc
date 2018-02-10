@@ -22,6 +22,23 @@ int fn_sub(int a, int b) {
 	return a + b;
 }
 
+void show_help(map<string, int (*)(int, int)> &f) {
+	cout << endl;
+	cout << "Simple Calc Help" << endl;
+	cout << "To quit, type in \"quit\"" << endl;
+	cout << "To view the help file, type in: \"help\"" << endl;
+	cout << "This calculator is a prefix expression calculator." << endl;
+	cout << "	Ex: * 3 4" << endl;
+	cout << "You can use any of the operations below in this syntax: " << endl;
+	cout << "These operations behave the same as in C." << endl;
+	cout << " 	oper arg1 arg2" << endl;
+	cout << endl;
+
+	for(auto i = f.begin(); i != f.end(); i++) {
+		cout << i->first << endl;
+	}
+	cout << endl;
+}
 	
 int main(void) {
 
@@ -53,9 +70,11 @@ int main(void) {
 		while(ss >> token) token_list.push_back(token);
 
 		string oper = *(token_list.begin());
-		if(functions.find(oper) == functions.end()) {
-			cout << "Error: " << oper << " ";
-			cout << " is not a defined function." << endl;
+		if(oper == "help") {
+			show_help(functions);
+		} else if(functions.find(oper) == functions.end()) {
+			cout << "Error: \"" << oper << "\" ";
+			cout << "is not a defined function." << endl;
 		} else {
 			int arg1 = stoi(token_list[1]);
 			int arg2 = stoi(token_list[2]);

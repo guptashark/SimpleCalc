@@ -13,6 +13,16 @@ class ParseTreeNode {
 	public: 
 		ParseTreeNode *parent;
 
+		// This is to do the actual computation. 
+		virtual int process_node() {
+			return 0;
+		}
+
+		virtual string getLexeme() {
+			return "";
+		}
+
+
 };
 
 // A parse tree node could just be a literal. 
@@ -22,21 +32,71 @@ class PTN_Literal: public ParseTreeNode {
 	string lexeme;
 
 	PTN_Literal(string l): lexeme(l) {};
+
+	int process_node() {
+		return stoi(lexeme);
+	}
+
+	string getLexeme() { return lexeme; };
 };
 
 // Or, it could be an bracketed function call: 
 class PTN_Function : public ParseTreeNode {
 
-	private: 
-	vector<ParseTreeNode *> args;
 	public: 
+	vector<ParseTreeNode *> args;
+
 	void add_arg(ParseTreeNode *ptn) {
 		args.push_back(ptn);
 	}
-	
+
+	string getLexeme() { 
+		// should throw an error... 
+		return "";
+	}
+
+	int process_node() {
+
+		vector<int> computed_args;
+
+		// need to run a compute on all the args
+		// save of course the first one, which 
+		// is the function name. 
+		auto i = args.begin();
+		string function_name = (*i)->getLexeme();
+		i++;
+
+		
+		while(i != args.end()) {
+			computed_args.push_back((*i)->process_node());
+			i++;
+		}
+
+		// finally, we need to do the processing with 
+		// the first string. Lets do just * and +. 
+
+		int answer;
+		if(function_name == "+") {
+			answer = 0;
+			for(auto j = computed_args.begin(); j != computed_args.end(); j++) {
+				answer += *j;
+			}
+		} else if(function_name == "*") {
+			answer = 1;
+			for(auto j = computed_args.begin(); j != computed_args.end(); j++) {
+				answer *= *j;
+			}
+		}
+
+		return answer;
+	}
+
+			
+
+			
 };
 
-ParseTreeNode *
+PTN_Function *
 generate_tree(vector<string> &token_list) {
 
 	stack<PTN_Function *> nested;
@@ -148,8 +208,9 @@ int main(void) {
 		// and that to print out the value of a variable, 
 		// the user must produce a bracketed expr. 
 
-		ParseTreeNode *command = generate_tree(token_list);
-		(void)command;
+		PTN_Function *command = generate_tree(token_list);
+
+		cout << command->args[0]->process_node() << endl;
 
 		string oper = *(token_list.begin());
 		if(oper == "help") {

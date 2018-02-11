@@ -7,6 +7,8 @@
 
 using namespace std;
 
+map<string, int> defined_vars;
+
 class ParseTreeNode {
 	// lets have a pointer to the parent, 
 	// so that we can traverse our tree. 
@@ -21,8 +23,6 @@ class ParseTreeNode {
 		virtual string getLexeme() {
 			return "";
 		}
-
-
 };
 
 // A parse tree node could just be a literal. 
@@ -33,8 +33,14 @@ class PTN_Literal: public ParseTreeNode {
 
 	PTN_Literal(string l): lexeme(l) {};
 
+	// potential issue - undefined identifier
 	int process_node() {
-		return stoi(lexeme);
+		// could be in symbol table. 
+		if(defined_vars.find(lexeme) != defined_vars.end()) {
+			return defined_vars[lexeme];
+		} else {
+			return stoi(lexeme);
+		}
 	}
 
 	string getLexeme() { return lexeme; };
@@ -64,9 +70,24 @@ class PTN_Function : public ParseTreeNode {
 		// is the function name. 
 		auto i = args.begin();
 		string function_name = (*i)->getLexeme();
+		if(function_name == "define") {
+			i++;
+			// do special stuff
+			string identifier = (*i)->getLexeme();
+			i++;
+
+			int stored_value = (*i)->process_node();
+			defined_vars[identifier] = stored_value;
+
+			return 0;
+		} 
+
 		i++;
 
-		
+		// this is not great... since now we've evaluated
+		// before running the function itself... which 
+		// doesn't work if it's an identifier that is 
+		// currently going to be defined. 
 		while(i != args.end()) {
 			computed_args.push_back((*i)->process_node());
 			i++;
@@ -86,14 +107,10 @@ class PTN_Function : public ParseTreeNode {
 			for(auto j = computed_args.begin(); j != computed_args.end(); j++) {
 				answer *= *j;
 			}
-		}
+		} 
 
 		return answer;
 	}
-
-			
-
-			
 };
 
 PTN_Function *
@@ -127,7 +144,18 @@ generate_tree(vector<string> &token_list) {
 	return start;
 }
 
+// not really necessary at this time... 
+// we can focus on implementing it later. 
+void
+tokenize_input(stringstream &input, vector<string> &tokens) {
+	
+	// all we need to do is parse the input and 
+	// recognize tokens to put into the vector. 
+	// mainly... brackets. 
+	(void)input;
+	(void)tokens;
 
+}
 
 
 int fn_div(int a, int b) {
@@ -185,7 +213,6 @@ int main(void) {
 	cout << "Simple Calculator" << endl;
 	cout << "Version 1.0" << endl;
 
-
 	while(true) {
 	
 		cout << "~> ";	
@@ -200,6 +227,11 @@ int main(void) {
 		
 		stringstream ss(user_input);
 		vector<string> token_list;
+
+		// need a more sophisticated way to put this 
+		// stuff together, so that we don't need to 
+		// do something like ( + 3 4 ) and can instead
+		// do: (+ 3 4)
 		string token;
 		while(ss >> token) token_list.push_back(token);
 
@@ -211,24 +243,8 @@ int main(void) {
 		PTN_Function *command = generate_tree(token_list);
 
 		cout << command->args[0]->process_node() << endl;
-
-		string oper = *(token_list.begin());
-		if(oper == "help") {
-			show_help(functions);
-		} else if(functions.find(oper) == functions.end()) {
-			cout << "Error: \"" << oper << "\" ";
-			cout << "is not a defined function." << endl;
-		} else {
-			int arg1 = stoi(token_list[1]);
-			int arg2 = stoi(token_list[2]);
-			cout << functions[oper](arg1, arg2) << endl;
-		}
+		// no error recovery - yet
 	}
 
-		
 	return 0;
-
 }
-
-
-

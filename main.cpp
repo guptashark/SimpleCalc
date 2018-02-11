@@ -6,6 +6,29 @@
 
 using namespace std;
 
+class ParseTreeNode {
+	// lets have a pointer to the parent, 
+	// so that we can traverse our tree. 
+	public: 
+		ParseTreeNode *parent;
+
+};
+
+// A parse tree node could just be a literal. 
+class PTN_Literal: ParseTreeNode {
+	string lexeme;
+};
+
+// Or, it could be an bracketed function call: 
+class PTN_function : ParseTreeNode {
+
+private: 
+	string fn_name;
+	vector<ParseTreeNode *> args;
+public: 
+	
+};
+
 int fn_div(int a, int b) {
 	if(b == 0) {
 		cout << "Error: Second argument of division cannot be 0." << endl;

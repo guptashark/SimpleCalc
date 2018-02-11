@@ -27,6 +27,10 @@ int fn_sub(int a, int b) {
 	return a - b;
 }
 
+int fn_modulo(int a, int b) {
+	return a % b;
+}
+
 void show_help(map<string, int (*)(int, int)> &f) {
 	cout << endl;
 	cout << "Simple Calc Help" << endl;
@@ -52,6 +56,7 @@ int main(void) {
 	functions["/"] = fn_div;
 	functions["+"] = fn_add;
 	functions["-"] = fn_sub;
+	functions["%"] = fn_modulo;
 
 	cout << "Simple Calculator" << endl;
 	cout << "Version 1.0" << endl;

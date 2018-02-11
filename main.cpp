@@ -1,4 +1,5 @@
 #include <iostream> 
+#include <stack> 
 #include <vector>
 #include <string> 
 #include <sstream>
@@ -22,12 +23,25 @@ class PTN_Literal: ParseTreeNode {
 // Or, it could be an bracketed function call: 
 class PTN_function : ParseTreeNode {
 
-private: 
+	private: 
 	string fn_name;
 	vector<ParseTreeNode *> args;
-public: 
+	public: 
 	
 };
+
+ParseTreeNode *
+generate_tree(vector<string> &token_list) {
+
+	(void)token_list;
+	ParseTreeNode *tree = new ParseTreeNode();
+	stack<ParseTreeNode *> nested;
+	
+	return tree;
+}
+
+
+
 
 int fn_div(int a, int b) {
 	if(b == 0) {
@@ -101,6 +115,14 @@ int main(void) {
 		vector<string> token_list;
 		string token;
 		while(ss >> token) token_list.push_back(token);
+
+		// process this token_list differently. 
+		// For now, assume that *every* expression is bracketed, 
+		// and that to print out the value of a variable, 
+		// the user must produce a bracketed expr. 
+
+		ParseTreeNode *command = generate_tree(token_list);
+		(void)command;
 
 		string oper = *(token_list.begin());
 		if(oper == "help") {

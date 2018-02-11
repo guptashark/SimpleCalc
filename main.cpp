@@ -16,28 +16,55 @@ class ParseTreeNode {
 };
 
 // A parse tree node could just be a literal. 
-class PTN_Literal: ParseTreeNode {
+class PTN_Literal: public ParseTreeNode {
+
+	public:
 	string lexeme;
+
+	PTN_Literal(string l): lexeme(l) {};
 };
 
 // Or, it could be an bracketed function call: 
-class PTN_function : ParseTreeNode {
+class PTN_Function : public ParseTreeNode {
 
 	private: 
-	string fn_name;
 	vector<ParseTreeNode *> args;
 	public: 
+	void add_arg(ParseTreeNode *ptn) {
+		args.push_back(ptn);
+	}
 	
 };
 
 ParseTreeNode *
 generate_tree(vector<string> &token_list) {
 
-	(void)token_list;
-	ParseTreeNode *tree = new ParseTreeNode();
-	stack<ParseTreeNode *> nested;
+	stack<PTN_Function *> nested;
+	PTN_Function *start = new PTN_Function();
+	nested.push(start);
+
+	auto i = token_list.begin();
+
+	while(i != token_list.end()) {
+		if(*i == "(") {
+
+			PTN_Function *add_me = new PTN_Function();
+			nested.top()->add_arg(add_me);
+			nested.push(add_me);
+
+		} else if(*i == ")") {
+			
+			nested.pop();
+
+		} else {
+			PTN_Literal *add_me = new PTN_Literal(*i);
+			nested.top()->add_arg(add_me);
+		}
+
+		i++;
+	}
 	
-	return tree;
+	return start;
 }
 
 

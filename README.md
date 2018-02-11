@@ -2,7 +2,7 @@
 
 ## About
 
-SimpleCalc is a simple [prefix expression](https:/en.wikipedia.org/wiki/Polish_notation) calculator. The format of the operations is: 
+SimpleCalc is a simple [prefix expression](https://en.wikipedia.org/wiki/Polish_notation) calculator. The format of the operations is: 
 
 **oper arg1 arg2**
 

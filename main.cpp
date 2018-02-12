@@ -322,8 +322,24 @@ Data *fn_mult(vector<Data *> args) {
 	return ret;
 }
 
-int fn_add(int a, int b) {
-	return a + b;
+Data *fn_add(vector<Data *> args) {
+
+	int answer = 0;
+	for(auto i = args.begin(); i != args.end(); i++) {
+	
+		// we ensure that all args are ints
+		if((*i)->getType() != "integer") {
+			cout << "BAD type! Expected Ints!" << endl;
+		}
+
+		DataInteger *current = dynamic_cast<DataInteger *>(*i);
+		
+		answer += current->getData();
+		
+	}
+
+	DataInteger *ret = new DataInteger(answer);
+	return ret;
 }
 
 int fn_sub(int a, int b) {
@@ -353,16 +369,14 @@ void show_help(map<string, int (*)(int, int)> &f) {
 }
 	
 int main(void) {
-
-	map<string, int (*)(int, int)> functions;
-	functions["/"] = fn_div;
-	functions["+"] = fn_add;
-	functions["-"] = fn_sub;
-	functions["%"] = fn_modulo;
-
 	/////////////////////////
 	DataFunction *int_mult = new DataFunction(fn_mult);
 	defined_vars["*"] = int_mult;
+	
+	DataFunction *int_add = new DataFunction(fn_add);
+	defined_vars["+"] = int_add;
+
+	
 
 	cout << "Simple Calculator" << endl;
 	cout << "Version 1.0" << endl;

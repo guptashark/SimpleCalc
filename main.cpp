@@ -19,8 +19,6 @@ public:
 	
 };
 
-map<string, Data *> defined_vars;
-
 class DataInteger : public Data {
 	private:	
 		
@@ -36,6 +34,9 @@ class DataInteger : public Data {
 		
 		string getType() { return type; };
 
+		int getData() {
+			return i;
+		}
 
 };
 
@@ -102,17 +103,23 @@ class DataFunction : public Data {
 	
 	private:
 		string type;
-
-		// function signature
-		// num arguments... 
-		// function name... 
-		// types it operates on... 
+		Data *(*fn_ptr)(vector<Data *>);
 
 	public:
 		// ctor
 		string getType() { return type; };
 
+		Data *apply(vector<Data *> &args) {
+			return fn_ptr(args);
+		}
 
+		// we need a ctor... lol
+		DataFunction(Data *(fn_ptr)(vector<Data *>)):
+			 fn_ptr(fn_ptr) {};
+
+		string to_str() {
+			return "function";
+		}
 };
 
 class DataNull : public Data {
@@ -129,6 +136,8 @@ class DataNull : public Data {
 		
 };
 
+map<string, Data *> defined_vars;
+
 class ParseTreeNode {
 	// lets have a pointer to the parent, 
 	// so that we can traverse our tree. 
@@ -137,7 +146,6 @@ class ParseTreeNode {
 
 		// This is to do the actual computation. 
 		virtual Data *process_node() = 0;
-
 		virtual string getLexeme() = 0;
 };
 
@@ -300,8 +308,25 @@ int fn_div(int a, int b) {
 	}
 }
 
-int fn_mult(int a, int b) {
-	return a * b;
+// integer mult, mapped with *
+Data *fn_mult(vector<Data *> args) {
+
+	int answer = 1;
+	for(auto i = args.begin(); i != args.end(); i++) {
+	
+		// we ensure that all args are ints
+		if((*i)->getType() != "integer") {
+			cout << "BAD type! Expected Ints!" << endl;
+		}
+
+		DataInteger *current = dynamic_cast<DataInteger *>(*i);
+		
+		answer *= current->getData();
+		
+	}
+
+	DataInteger *ret = new DataInteger(answer);
+	return ret;
 }
 
 int fn_add(int a, int b) {
@@ -337,14 +362,19 @@ void show_help(map<string, int (*)(int, int)> &f) {
 int main(void) {
 
 	map<string, int (*)(int, int)> functions;
-	functions["*"] = fn_mult;
 	functions["/"] = fn_div;
 	functions["+"] = fn_add;
 	functions["-"] = fn_sub;
 	functions["%"] = fn_modulo;
 
+	/////////////////////////
+	DataFunction *int_mult = new DataFunction(fn_mult);
+	defined_vars["*"] = int_mult;
+
 	cout << "Simple Calculator" << endl;
 	cout << "Version 1.0" << endl;
+
+
 
 	while(true) {
 	

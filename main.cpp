@@ -8,31 +8,62 @@
 
 using namespace std;
 
-map<string, int> defined_vars;
-
 class Data {
-	public:
+	private:
 		string type;
 };
 
-class DataInteger {
+map<string, Data *> defined_vars;
+
+class DataInteger : public Data {
 	private:	
 		int i;
 
 	public:
+		DataInteger(int i): i(i) {};
 };
 
-class DataString {
+class DataString : public Data {
 	private:
 		string s;
 
 	public:
+		DataString(string t) {
+			unsigned int i = 1;
+			while(i < t.length() - 1) {
+				s[i - 1] = t[i];
+			}
+		}
 };
 
-class DataList {
+class DataList : public Data {
 	private:
 		list<Data *> l;
 	public:
+		// take in a vector, convert to list.
+		DataList(vector<Data *> d) {
+			
+			for(auto i = d.begin(); i != d.end(); i++) {
+				l.push_back(*i);
+			}
+		}
+
+		friend ostream &operator<<(ostream &out, DataList &dl) {
+
+			out << "(";
+			auto iter = dl.l.begin();
+
+			for(int i = 0; i < dl.l.size() - 1; i++) {
+				out << *iter << " ";
+				iter++;
+			}
+
+			out << *iter << ")";
+			return out;
+		}
+};
+
+class DataNull : public Data {
 };
 
 class ParseTreeNode {
@@ -42,7 +73,7 @@ class ParseTreeNode {
 		ParseTreeNode *parent;
 
 		// This is to do the actual computation. 
-		virtual int process_node() {
+		virtual Data *process_node() {
 			return 0;
 		}
 
@@ -60,14 +91,18 @@ class PTN_Literal: public ParseTreeNode {
 	PTN_Literal(string l): lexeme(l) {};
 
 	// potential issue - undefined identifier
-	int process_node() {
+	Data *process_node() {
 		// could be in symbol table. 
 		if(defined_vars.find(lexeme) != defined_vars.end()) {
 			return defined_vars[lexeme];
 		} else {
+			if(lexeme[0] == '"' && lexeme[lexeme.size() - 1] == '"') {
+				return (new DataString(lexeme));
+			} 
+
 			// should do some checking... 
 			// make sure all chars are digits
-			return stoi(lexeme);
+			return (new DataInteger(stoi(lexeme)));
 		}
 	}
 
@@ -89,9 +124,9 @@ class PTN_Function : public ParseTreeNode {
 		return "";
 	}
 
-	int process_node() {
+	Data *process_node() {
 
-		vector<int> computed_args;
+		vector<Data *> computed_args;
 
 		// need to run a compute on all the args
 		// save of course the first one, which 
@@ -104,7 +139,7 @@ class PTN_Function : public ParseTreeNode {
 			string identifier = (*i)->getLexeme();
 			i++;
 
-			int stored_value = (*i)->process_node();
+			Data *stored_value = (*i)->process_node();
 			defined_vars[identifier] = stored_value;
 
 			return 0;
@@ -124,18 +159,23 @@ class PTN_Function : public ParseTreeNode {
 		// finally, we need to do the processing with 
 		// the first string. Lets do just * and +. 
 
-		int answer;
-		if(function_name == "+") {
-			answer = 0;
+		Data *answer;
+		if(function_name == "list") {
+			answer = new DataList(computed_args);
+		} 
+		
+		/*else if(function_name == "+") {
+			//answer = 0;
 			for(auto j = computed_args.begin(); j != computed_args.end(); j++) {
-				answer += *j;
+			//	answer += *j;
 			}
 		} else if(function_name == "*") {
-			answer = 1;
+		//	answer = 1;
 			for(auto j = computed_args.begin(); j != computed_args.end(); j++) {
 				answer *= *j;
 			}
 		} 
+		*/
 
 		return answer;
 	}

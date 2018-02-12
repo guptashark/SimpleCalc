@@ -226,28 +226,21 @@ class PTN_Function : public ParseTreeNode {
 		}
 
 		// finally, we need to do the processing with 
-		// the first string. Lets do just * and +. 
+		// the first string. Lets do it! 
 
 		Data *answer;
 
 		if(function_name == "list") {
 			answer = new DataList(computed_args);
 			
-		} 
-		
-		/*
-		else if(function_name == "+") {
-			//answer = 0;
-			for(auto j = computed_args.begin(); j != computed_args.end(); j++) {
-			//	answer += *j;
-			}
-		} else if(function_name == "*") {
-		//	answer = 1;
-			for(auto j = computed_args.begin(); j != computed_args.end(); j++) {
-				answer *= *j;
-			}
-		} 
-		*/
+		} else {
+			Data *current_val = defined_vars[function_name];
+			DataFunction *current = dynamic_cast<DataFunction *>(current_val);
+
+			answer = current->apply(computed_args);
+		}
+
+
 		return answer;
 	}
 };

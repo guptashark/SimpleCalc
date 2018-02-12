@@ -78,6 +78,8 @@ class DataList : public  Data {
 				l.push_back(*i);
 			}
 		}
+		
+		DataList(list<Data *> l): type("list"), l(l) {};
 
 		string to_str() {
 			string out = "(list ";
@@ -95,6 +97,9 @@ class DataList : public  Data {
 		}
 
 		string getType() { return type; };
+		list<Data *> getData() {
+			return l;
+		}
 
 };
 
@@ -342,6 +347,22 @@ Data *fn_add(vector<Data *> args) {
 	return ret;
 }
 
+// note, this may be wrong, since 
+// we may run into issues such as... 
+Data *fn_cons(vector<Data *> args) {
+
+	// assume types are correct
+	auto i = args.begin();
+	Data *to_add = *i;
+	i++;
+	DataList *current = dynamic_cast<DataList *>(*i);
+	list<Data *> l = current->getData();
+	l.push_front(to_add);
+	DataList *ret = new DataList(l);
+	return ret;
+}
+	
+
 int fn_sub(int a, int b) {
 	return a - b;
 }
@@ -375,7 +396,9 @@ int main(void) {
 	
 	DataFunction *int_add = new DataFunction(fn_add);
 	defined_vars["+"] = int_add;
-
+	
+	DataFunction *list_cons = new DataFunction(fn_cons);
+	defined_vars["cons"] = list_cons;
 	
 
 	cout << "Simple Calculator" << endl;

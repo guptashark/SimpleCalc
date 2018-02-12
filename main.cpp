@@ -1,5 +1,6 @@
 #include <iostream> 
 #include <stack> 
+#include <list>
 #include <vector>
 #include <string> 
 #include <sstream>
@@ -8,6 +9,31 @@
 using namespace std;
 
 map<string, int> defined_vars;
+
+class Data {
+	public:
+		string type;
+};
+
+class DataInteger {
+	private:	
+		int i;
+
+	public:
+};
+
+class DataString {
+	private:
+		string s;
+
+	public:
+};
+
+class DataList {
+	private:
+		list<Data *> l;
+	public:
+};
 
 class ParseTreeNode {
 	// lets have a pointer to the parent, 
@@ -39,6 +65,8 @@ class PTN_Literal: public ParseTreeNode {
 		if(defined_vars.find(lexeme) != defined_vars.end()) {
 			return defined_vars[lexeme];
 		} else {
+			// should do some checking... 
+			// make sure all chars are digits
 			return stoi(lexeme);
 		}
 	}
@@ -152,9 +180,11 @@ tokenize_input(stringstream &input, vector<string> &tokens) {
 	// all we need to do is parse the input and 
 	// recognize tokens to put into the vector. 
 	// mainly... brackets. 
+
 	(void)input;
 	(void)tokens;
 
+	
 }
 
 

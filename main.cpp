@@ -11,6 +11,11 @@ using namespace std;
 class Data {
 	private:
 		string type;
+	public:
+	
+		// needs to be virtual
+		virtual string to_str() = 0;
+	
 };
 
 map<string, Data *> defined_vars;
@@ -21,6 +26,10 @@ class DataInteger : public Data {
 
 	public:
 		DataInteger(int i): i(i) {};
+
+		string to_str() {
+			 return to_string(i); 
+		};
 };
 
 class DataString : public Data {
@@ -33,6 +42,10 @@ class DataString : public Data {
 			while(i < t.length() - 1) {
 				s[i - 1] = t[i];
 			}
+		}
+
+		string to_str() {
+			return "\"" + s + "\"";
 		}
 };
 
@@ -48,17 +61,18 @@ class DataList : public Data {
 			}
 		}
 
-		friend ostream &operator<<(ostream &out, DataList &dl) {
+		string to_str() {
+			string out = "(list ";
+			auto iter = l.begin();
 
-			out << "(";
-			auto iter = dl.l.begin();
-
-			for(int i = 0; i < dl.l.size() - 1; i++) {
-				out << *iter << " ";
+			for(unsigned int i = 0; i < l.size() - 1; i++) {
+				out += (*iter)->to_str();
+				out += " ";
 				iter++;
 			}
 
-			out << *iter << ")";
+			out += (*iter)->to_str();
+			out += ")"; 
 			return out;
 		}
 };
@@ -162,8 +176,11 @@ class PTN_Function : public ParseTreeNode {
 		Data *answer;
 		if(function_name == "list") {
 			answer = new DataList(computed_args);
+			//cout << *retme << endl;	
+			//answer = retme;
 		} 
-		
+	
+	
 		/*else if(function_name == "+") {
 			//answer = 0;
 			for(auto j = computed_args.begin(); j != computed_args.end(); j++) {
@@ -311,8 +328,10 @@ int main(void) {
 		// the user must produce a bracketed expr. 
 
 		PTN_Function *command = generate_tree(token_list);
-
-		cout << command->args[0]->process_node() << endl;
+		
+		Data *to_print = command->args[0]->process_node();
+		//cout << command->args[0]->process_node() << endl;
+		cout << to_print->to_str() << endl;
 		// no error recovery - yet
 	}
 

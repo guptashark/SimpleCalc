@@ -8,13 +8,14 @@
 
 using namespace std;
 
+// this is dumb, 
+// it's not recognizing type as a 
+// base class member... wtf. 
 class Data {
-	private:
-		string type;
-	public:
-	
+public:	
 		// needs to be virtual
 		virtual string to_str() = 0;
+		virtual string getType() = 0;
 	
 };
 
@@ -22,22 +23,29 @@ map<string, Data *> defined_vars;
 
 class DataInteger : public Data {
 	private:	
+		
+		string type;
 		int i;
 
 	public:
-		DataInteger(int i): i(i) {};
+		DataInteger(int i): type("integer"), i(i) {};
 
 		string to_str() {
 			 return to_string(i); 
 		};
+		
+		string getType() { return type; };
+
+
 };
 
 class DataString : public Data {
 	private:
+		string type;	
 		string s;
-
+		
 	public:
-		DataString(string t) {
+		DataString(string t): type("string") {
 			unsigned int i = 1;
 			while(i < t.length() - 1) {
 				s.push_back(t[i]);
@@ -51,14 +59,19 @@ class DataString : public Data {
 			ret += "\"";
 			return ret;
 		}
+
+		string getType() { return type; };
+
 };
 
-class DataList : public Data {
+class DataList : public  Data {
 	private:
+		string type;
+
 		list<Data *> l;
 	public:
 		// take in a vector, convert to list.
-		DataList(vector<Data *> d) {
+		DataList(vector<Data *> d): type("list") {
 			
 			for(auto i = d.begin(); i != d.end(); i++) {
 				l.push_back(*i);
@@ -79,15 +92,41 @@ class DataList : public Data {
 			out += ")"; 
 			return out;
 		}
+
+		string getType() { return type; };
+
+};
+
+// since functions are first class values... 
+class DataFunction : public Data {
+	
+	private:
+		string type;
+
+		// function signature
+		// num arguments... 
+		// function name... 
+		// types it operates on... 
+
+	public:
+		// ctor
+		string getType() { return type; };
+
+
 };
 
 class DataNull : public Data {
+	private: 
+		string type;
 	public:
 
-		DataNull() {};
+		DataNull(): type("null") {};
 		string to_str() {
 			return "";
 		}
+		string getType() { return type; };
+
+		
 };
 
 class ParseTreeNode {
@@ -339,6 +378,7 @@ int main(void) {
 		Data *to_print = command->args[0]->process_node();
 		//cout << command->args[0]->process_node() << endl;
 		cout << to_print->to_str() << endl;
+		cout << to_print->getType() << endl;
 		// no error recovery - yet
 	}
 

@@ -40,12 +40,16 @@ class DataString : public Data {
 		DataString(string t) {
 			unsigned int i = 1;
 			while(i < t.length() - 1) {
-				s[i - 1] = t[i];
+				s.push_back(t[i]);
+				i++;
 			}
 		}
 
 		string to_str() {
-			return "\"" + s + "\"";
+			string ret = "\"";
+			ret += s;
+			ret += "\"";
+			return ret;
 		}
 };
 
@@ -87,13 +91,9 @@ class ParseTreeNode {
 		ParseTreeNode *parent;
 
 		// This is to do the actual computation. 
-		virtual Data *process_node() {
-			return 0;
-		}
+		virtual Data *process_node() = 0;
 
-		virtual string getLexeme() {
-			return "";
-		}
+		virtual string getLexeme() = 0;
 };
 
 // A parse tree node could just be a literal. 
@@ -110,9 +110,10 @@ class PTN_Literal: public ParseTreeNode {
 		if(defined_vars.find(lexeme) != defined_vars.end()) {
 			return defined_vars[lexeme];
 		} else {
-			if(lexeme[0] == '"' && lexeme[lexeme.size() - 1] == '"') {
+			if((lexeme[0] == '"') && (lexeme[lexeme.size() - 1] == '"')) {
 				return (new DataString(lexeme));
 			} 
+			//cout << lexeme[0] << " " << lexeme[lexeme.size() - 1] << endl;
 
 			// should do some checking... 
 			// make sure all chars are digits
@@ -174,14 +175,14 @@ class PTN_Function : public ParseTreeNode {
 		// the first string. Lets do just * and +. 
 
 		Data *answer;
+
 		if(function_name == "list") {
 			answer = new DataList(computed_args);
-			//cout << *retme << endl;	
-			//answer = retme;
+			
 		} 
-	
-	
-		/*else if(function_name == "+") {
+		
+		/*
+		else if(function_name == "+") {
 			//answer = 0;
 			for(auto j = computed_args.begin(); j != computed_args.end(); j++) {
 			//	answer += *j;
@@ -193,7 +194,6 @@ class PTN_Function : public ParseTreeNode {
 			}
 		} 
 		*/
-
 		return answer;
 	}
 };

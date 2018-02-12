@@ -82,6 +82,12 @@ class DataList : public Data {
 };
 
 class DataNull : public Data {
+	public:
+
+		DataNull() {};
+		string to_str() {
+			return "";
+		}
 };
 
 class ParseTreeNode {
@@ -156,8 +162,9 @@ class PTN_Function : public ParseTreeNode {
 
 			Data *stored_value = (*i)->process_node();
 			defined_vars[identifier] = stored_value;
-
-			return 0;
+			
+			Data *ret = new DataNull();
+			return ret;
 		} 
 
 		i++;

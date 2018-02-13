@@ -427,6 +427,46 @@ Data *fn_geq(vector<Data *> args) {
 	return ret;
 }
 
+Data *fn_leq(vector<Data *> args) {
+	auto i = args.begin();
+	DataInteger *first = dynamic_cast<DataInteger *>(*i);
+	i++;
+	DataInteger *second = dynamic_cast<DataInteger *>(*i);
+	int f = first->getData();
+	int s = second->getData();
+
+	bool val;
+	if(f <= s) {
+		val = true;
+	} else {
+		val = false;
+	}
+
+	DataBool *ret = new DataBool(val);	
+	return ret;
+}
+
+
+Data *fn_gt(vector<Data *> args) {
+	auto i = args.begin();
+	DataInteger *first = dynamic_cast<DataInteger *>(*i);
+	i++;
+	DataInteger *second = dynamic_cast<DataInteger *>(*i);
+	int f = first->getData();
+	int s = second->getData();
+
+	bool val;
+	if(f > s) {
+		val = true;
+	} else {
+		val = false;
+	}
+
+	DataBool *ret = new DataBool(val);	
+	return ret;
+}
+
+
 Data *fn_if(vector<Data *> args) {
 	auto i = args.begin();
 	DataBool *condition = dynamic_cast<DataBool *>(*i);
@@ -436,7 +476,6 @@ Data *fn_if(vector<Data *> args) {
 	Data *second = *i;
 
 	
-	
 	if(condition->getData()) {
 		return first;
 	} else {
@@ -445,14 +484,6 @@ Data *fn_if(vector<Data *> args) {
 }
 
 
-
-int fn_sub(int a, int b) {
-	return a - b;
-}
-
-int fn_modulo(int a, int b) {
-	return a % b;
-}
 
 void show_help(map<string, int (*)(int, int)> &f) {
 	cout << endl;
@@ -490,6 +521,9 @@ int main(void) {
 
 	DataFunction *bool_geq = new DataFunction(fn_geq);
 	defined_vars[">="] = bool_geq;	
+
+	defined_vars["<="] = new DataFunction(fn_leq);
+	defined_vars[">"] = new DataFunction(fn_gt);
 
 	DataFunction *bool_if = new DataFunction(fn_if);
 	defined_vars["if"] = bool_if;

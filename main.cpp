@@ -322,15 +322,6 @@ tokenize_input(stringstream &input, vector<string> &tokens) {
 }
 
 
-int fn_div(int a, int b) {
-	if(b == 0) {
-		cout << "Error: Second argument of division cannot be 0." << endl;
-		return 0;
-	} else {
-		return a / b;
-	}
-}
-
 // integer mult, mapped with *
 Data *fn_mult(vector<Data *> args) {
 
@@ -371,6 +362,25 @@ Data *fn_add(vector<Data *> args) {
 	DataInteger *ret = new DataInteger(answer);
 	return ret;
 }
+
+Data *fn_sub(vector<Data *> args) {
+	int answer = 0;
+	auto i = args.begin();
+	
+	DataInteger *current = dynamic_cast<DataInteger *>(*i);
+	answer = current->getData();
+
+	i++;
+
+	current = dynamic_cast<DataInteger *>(*i);
+	answer = answer - current->getData();
+		
+
+	DataInteger *ret = new DataInteger(answer);
+	return ret;
+}
+
+
 
 // note, this may be wrong, since 
 // we may run into issues such as... 
@@ -435,6 +445,7 @@ Data *fn_if(vector<Data *> args) {
 }
 
 
+
 int fn_sub(int a, int b) {
 	return a - b;
 }
@@ -468,6 +479,8 @@ int main(void) {
 	
 	DataFunction *int_add = new DataFunction(fn_add);
 	defined_vars["+"] = int_add;
+
+	defined_vars["-"] = new DataFunction(fn_sub);
 	
 	DataFunction *list_cons = new DataFunction(fn_cons);
 	defined_vars["cons"] = list_cons;

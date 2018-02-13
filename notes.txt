@@ -1,0 +1,22 @@
+How are we going to make a function... 
+
+We need to recognize parameters, and substitution... 
+Quite literally, a function is a tree. 
+
+The tree has placeholders for variables. 
+
+The variables are then subbed in when the function is called. 
+
+The function is then evaluated. 
+
+
+Our current tree must allow for these placeholders... 
+but how? 
+
+We're not evaluating the tree... 
+
+Generate a symbol table. Try to pull from it 
+before pulling from the general table. 
+
+So, we make a function symbol table, and then... 
+go on our way. 

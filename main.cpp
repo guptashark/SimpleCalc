@@ -466,6 +466,24 @@ Data *fn_gt(vector<Data *> args) {
 	return ret;
 }
 
+Data *fn_lt(vector<Data *> args) {
+	auto i = args.begin();
+	DataInteger *first = dynamic_cast<DataInteger *>(*i);
+	i++;
+	DataInteger *second = dynamic_cast<DataInteger *>(*i);
+	int f = first->getData();
+	int s = second->getData();
+
+	bool val;
+	if(f < s) {
+		val = true;
+	} else {
+		val = false;
+	}
+
+	DataBool *ret = new DataBool(val);	
+	return ret;
+}
 
 Data *fn_if(vector<Data *> args) {
 	auto i = args.begin();
@@ -505,28 +523,19 @@ void show_help(map<string, int (*)(int, int)> &f) {
 	
 int main(void) {
 	/////////////////////////
-	DataFunction *int_mult = new DataFunction(fn_mult);
-	defined_vars["*"] = int_mult;
-	
-	DataFunction *int_add = new DataFunction(fn_add);
-	defined_vars["+"] = int_add;
-
+	defined_vars["*"] = new DataFunction(fn_mult);
+	defined_vars["+"] = new DataFunction(fn_add);
 	defined_vars["-"] = new DataFunction(fn_sub);
 	
-	DataFunction *list_cons = new DataFunction(fn_cons);
-	defined_vars["cons"] = list_cons;
+	defined_vars["cons"] = new DataFunction(fn_cons);
+	defined_vars["rest"] = new DataFunction(fn_rest);
 
-	DataFunction *list_rest = new DataFunction(fn_rest);
-	defined_vars["rest"] = list_rest;
-
-	DataFunction *bool_geq = new DataFunction(fn_geq);
-	defined_vars[">="] = bool_geq;	
-
+	defined_vars[">="] = new DataFunction(fn_geq);	
 	defined_vars["<="] = new DataFunction(fn_leq);
 	defined_vars[">"] = new DataFunction(fn_gt);
+	defined_vars["<"] = new DataFunction(fn_lt);
 
-	DataFunction *bool_if = new DataFunction(fn_if);
-	defined_vars["if"] = bool_if;
+	defined_vars["if"] = new DataFunction(fn_if);
 	
 	cout << "Simple Calculator" << endl;
 	cout << "Version 1.0" << endl;

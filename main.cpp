@@ -390,6 +390,17 @@ Data *fn_sqr(vector<Data *> args) {
 	return new DataInteger(answer);
 }
 
+Data *fn_even_q(vector<Data *> args) {
+	auto i = args.begin();
+	
+	DataInteger *c = dynamic_cast<DataInteger *>(*i);
+	if(c->getData() % 2 == 0) {
+		return new DataBool(true);
+	} else {
+		return new DataBool(false);
+	}
+}
+
 
 // note, this may be wrong, since 
 // we may run into issues such as... 
@@ -511,7 +522,29 @@ Data *fn_build_list(vector<Data *> args) {
 	}
 
 	return new DataList(l);
+}
 
+Data *fn_filter(vector<Data *> args) {
+	auto i = args.begin();
+	DataFunction *f = dynamic_cast<DataFunction *>(*i);
+	i++;
+
+	DataList *source_ptr = dynamic_cast<DataList *>(*i);
+	list<Data *> source = source_ptr->getData();	
+
+	list<Data *> output;
+
+	for(auto j = source.begin(); j != source.end(); j++) {
+		Data *current = *j;	
+		vector<Data *> f_args = {current};
+		DataBool *in_list = dynamic_cast<DataBool *>(f->apply(f_args));
+		if(in_list->getData()) {
+			output.push_back(*j);
+		}
+	}
+	
+	return new DataList(output);
+	
 }
 
 Data *fn_and(vector<Data *> args) {
@@ -594,11 +627,14 @@ int main(void) {
 	defined_vars["+"] = new DataFunction(fn_add);
 	defined_vars["-"] = new DataFunction(fn_sub);
 
+	defined_vars["even?"] = new DataFunction(fn_even_q);
+
 	defined_vars["sqr"] = new DataFunction(fn_sqr);
 	
 	defined_vars["cons"] = new DataFunction(fn_cons);
 	defined_vars["rest"] = new DataFunction(fn_rest);
 	defined_vars["build_list"] = new DataFunction(fn_build_list);
+	defined_vars["filter"] = new DataFunction(fn_filter);
 
 	defined_vars[">="] = new DataFunction(fn_geq);	
 	defined_vars["<="] = new DataFunction(fn_leq);

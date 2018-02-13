@@ -19,6 +19,27 @@ public:
 	
 };
 
+class DataBool: public Data {
+	private: 
+		string type;
+		bool val;
+
+	public: 
+		DataBool(bool val): type("bool"), val(val) {};
+		string getType() {return type; };
+		string to_str() {
+			if(val) {
+				return "#True";
+			} else {
+				return "#False";
+			}
+		}
+
+		bool getData() {
+			return val;
+		}
+};
+
 class DataInteger : public Data {
 	private:	
 		
@@ -375,7 +396,27 @@ Data *fn_rest(vector<Data *> args) {
 	DataList *ret = new DataList(l);
 	return ret;
 }
-	
+
+// Greater than or equal to	
+Data *fn_geq(vector<Data *> args) {
+	auto i = args.begin();
+	DataInteger *first = dynamic_cast<DataInteger *>(*i);
+	i++;
+	DataInteger *second = dynamic_cast<DataInteger *>(*i);
+	int f = first->getData();
+	int s = second->getData();
+
+	bool val;
+	if(f >= s) {
+		val = true;
+	} else {
+		val = false;
+	}
+
+	DataBool *ret = new DataBool(val);	
+	return ret;
+}
+
 
 int fn_sub(int a, int b) {
 	return a - b;
@@ -416,7 +457,9 @@ int main(void) {
 
 	DataFunction *list_rest = new DataFunction(fn_rest);
 	defined_vars["rest"] = list_rest;
-	
+
+	DataFunction *bool_geq = new DataFunction(fn_geq);
+	defined_vars[">="] = bool_geq;	
 
 	cout << "Simple Calculator" << endl;
 	cout << "Version 1.0" << endl;

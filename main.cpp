@@ -84,15 +84,19 @@ class DataList : public  Data {
 		string to_str() {
 			string out = "(list ";
 			auto iter = l.begin();
+			if(l.size() != 0) {
+				for(unsigned int i = 0; i < l.size() - 1; i++) {
+					out += (*iter)->to_str();
+					out += " ";
+					iter++;
+				}
 
-			for(unsigned int i = 0; i < l.size() - 1; i++) {
 				out += (*iter)->to_str();
-				out += " ";
-				iter++;
+				out += ")"; 
+			} else {
+				out += ")";
 			}
 
-			out += (*iter)->to_str();
-			out += ")"; 
 			return out;
 		}
 
@@ -361,6 +365,16 @@ Data *fn_cons(vector<Data *> args) {
 	DataList *ret = new DataList(l);
 	return ret;
 }
+
+Data *fn_rest(vector<Data *> args) {
+	
+	auto i = args.begin();
+	DataList *current = dynamic_cast<DataList *>(*i);
+	list<Data *> l = current->getData();
+	l.pop_front();
+	DataList *ret = new DataList(l);
+	return ret;
+}
 	
 
 int fn_sub(int a, int b) {
@@ -399,6 +413,9 @@ int main(void) {
 	
 	DataFunction *list_cons = new DataFunction(fn_cons);
 	defined_vars["cons"] = list_cons;
+
+	DataFunction *list_rest = new DataFunction(fn_rest);
+	defined_vars["rest"] = list_rest;
 	
 
 	cout << "Simple Calculator" << endl;

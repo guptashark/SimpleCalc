@@ -485,6 +485,23 @@ Data *fn_lt(vector<Data *> args) {
 	return ret;
 }
 
+Data *fn_and(vector<Data *> args) {
+
+	DataBool *ret;
+	auto i = args.begin();
+	
+	while(i != args.begin()) {
+		DataBool *current = dynamic_cast<DataBool *>(*i);
+		if(current->getData() == false) {
+			ret = new DataBool(false);
+			return ret;
+		}
+	}
+
+	ret = new DataBool(true);
+	return ret;
+}
+
 Data *fn_if(vector<Data *> args) {
 	auto i = args.begin();
 	DataBool *condition = dynamic_cast<DataBool *>(*i);
@@ -535,7 +552,11 @@ int main(void) {
 	defined_vars[">"] = new DataFunction(fn_gt);
 	defined_vars["<"] = new DataFunction(fn_lt);
 
+	defined_vars["and"] = new DataFunction(fn_and);
+
+
 	defined_vars["if"] = new DataFunction(fn_if);
+
 	
 	cout << "Simple Calculator" << endl;
 	cout << "Version 1.0" << endl;

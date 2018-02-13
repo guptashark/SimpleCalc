@@ -490,17 +490,38 @@ Data *fn_and(vector<Data *> args) {
 	DataBool *ret;
 	auto i = args.begin();
 	
-	while(i != args.begin()) {
+	while(i != args.end()) {
 		DataBool *current = dynamic_cast<DataBool *>(*i);
 		if(current->getData() == false) {
 			ret = new DataBool(false);
 			return ret;
 		}
+		i++;
 	}
 
 	ret = new DataBool(true);
 	return ret;
 }
+
+
+Data *fn_or(vector<Data *> args) {
+
+	DataBool *ret;
+	auto i = args.begin();
+	
+	while(i != args.end()) {
+		DataBool *current = dynamic_cast<DataBool *>(*i);
+		if(current->getData() == true) {
+			ret = new DataBool(true);
+			return ret;
+		}
+		i++;
+	}
+
+	ret = new DataBool(false);
+	return ret;
+}
+
 
 Data *fn_if(vector<Data *> args) {
 	auto i = args.begin();
@@ -553,6 +574,7 @@ int main(void) {
 	defined_vars["<"] = new DataFunction(fn_lt);
 
 	defined_vars["and"] = new DataFunction(fn_and);
+	defined_vars["or"] = new DataFunction(fn_or);
 
 
 	defined_vars["if"] = new DataFunction(fn_if);

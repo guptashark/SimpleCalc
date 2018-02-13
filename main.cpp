@@ -417,6 +417,23 @@ Data *fn_geq(vector<Data *> args) {
 	return ret;
 }
 
+Data *fn_if(vector<Data *> args) {
+	auto i = args.begin();
+	DataBool *condition = dynamic_cast<DataBool *>(*i);
+	i++;
+	Data *first = *i;
+	i++;
+	Data *second = *i;
+
+	
+	
+	if(condition->getData()) {
+		return first;
+	} else {
+		return second;
+	}
+}
+
 
 int fn_sub(int a, int b) {
 	return a - b;
@@ -461,8 +478,13 @@ int main(void) {
 	DataFunction *bool_geq = new DataFunction(fn_geq);
 	defined_vars[">="] = bool_geq;	
 
+	DataFunction *bool_if = new DataFunction(fn_if);
+	defined_vars["if"] = bool_if;
+	
 	cout << "Simple Calculator" << endl;
 	cout << "Version 1.0" << endl;
+
+	
 
 
 

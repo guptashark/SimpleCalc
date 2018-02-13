@@ -380,6 +380,15 @@ Data *fn_sub(vector<Data *> args) {
 	return ret;
 }
 
+Data *fn_sqr(vector<Data *> args) {
+	int answer = 0;
+	auto i = args.begin();
+
+	DataInteger *current = dynamic_cast<DataInteger *>(*i);
+	answer = current->getData() * current->getData();
+
+	return new DataInteger(answer);
+}
 
 
 // note, this may be wrong, since 
@@ -447,6 +456,7 @@ Data *fn_leq(vector<Data *> args) {
 }
 
 
+
 Data *fn_gt(vector<Data *> args) {
 	auto i = args.begin();
 	DataInteger *first = dynamic_cast<DataInteger *>(*i);
@@ -483,6 +493,25 @@ Data *fn_lt(vector<Data *> args) {
 
 	DataBool *ret = new DataBool(val);	
 	return ret;
+}
+
+Data *fn_build_list(vector<Data *> args) {
+	auto i = args.begin();
+	DataInteger *num_elements = dynamic_cast<DataInteger *>(*i);	
+
+	i++;
+	DataFunction *f = dynamic_cast<DataFunction *>(*i);
+
+	list<Data *> l;
+
+	for(int k = 0; k < num_elements->getData(); k++) {
+		vector<Data *> f_args;
+		f_args.push_back(new DataInteger(k));
+		l.push_back(f->apply(f_args));
+	}
+
+	return new DataList(l);
+
 }
 
 Data *fn_and(vector<Data *> args) {
@@ -564,9 +593,12 @@ int main(void) {
 	defined_vars["*"] = new DataFunction(fn_mult);
 	defined_vars["+"] = new DataFunction(fn_add);
 	defined_vars["-"] = new DataFunction(fn_sub);
+
+	defined_vars["sqr"] = new DataFunction(fn_sqr);
 	
 	defined_vars["cons"] = new DataFunction(fn_cons);
 	defined_vars["rest"] = new DataFunction(fn_rest);
+	defined_vars["build_list"] = new DataFunction(fn_build_list);
 
 	defined_vars[">="] = new DataFunction(fn_geq);	
 	defined_vars["<="] = new DataFunction(fn_leq);

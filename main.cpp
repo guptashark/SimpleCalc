@@ -374,7 +374,6 @@ Data *fn_sub(vector<Data *> args) {
 
 	current = dynamic_cast<DataInteger *>(*i);
 	answer = answer - current->getData();
-		
 
 	DataInteger *ret = new DataInteger(answer);
 	return ret;
@@ -392,6 +391,21 @@ Data *fn_div(vector<Data *> args) {
 	current = dynamic_cast<DataInteger *>(*i);
 	answer = answer / current->getData();
 		
+	DataInteger *ret = new DataInteger(answer);
+	return ret;
+}
+
+Data *fn_remainder(vector<Data *> args) {
+	int answer = 0;
+	auto i = args.begin();
+	
+	DataInteger *current = dynamic_cast<DataInteger *>(*i);
+	answer = current->getData();
+
+	i++;
+
+	current = dynamic_cast<DataInteger *>(*i);
+	answer = answer % current->getData();
 
 	DataInteger *ret = new DataInteger(answer);
 	return ret;
@@ -668,6 +682,7 @@ int main(void) {
 	defined_vars["+"] = new DataFunction(fn_add);
 	defined_vars["-"] = new DataFunction(fn_sub);
 	defined_vars["/"] = new DataFunction(fn_div);
+	defined_vars["remainder"] = new DataFunction(fn_remainder);
 
 	defined_vars["even?"] = new DataFunction(fn_even_q);
 

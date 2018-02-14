@@ -458,6 +458,13 @@ Data *fn_rest(vector<Data *> args) {
 	return ret;
 }
 
+Data *fn_list_length(vector<Data *> args) {
+	auto i = args.begin();
+	DataList *current = dynamic_cast<DataList *>(*i);
+	int length = current->getData().size();
+	return new DataInteger(length);
+}
+
 // Greater than or equal to	
 Data *fn_geq(vector<Data *> args) {
 	auto i = args.begin();
@@ -690,6 +697,7 @@ int main(void) {
 	
 	defined_vars["cons"] = new DataFunction(fn_cons);
 	defined_vars["rest"] = new DataFunction(fn_rest);
+	defined_vars["length"] = new DataFunction(fn_list_length);
 	defined_vars["build_list"] = new DataFunction(fn_build_list);
 	defined_vars["filter"] = new DataFunction(fn_filter);
 	defined_vars["map"] = new DataFunction(fn_map);

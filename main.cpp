@@ -465,6 +465,28 @@ Data *fn_list_length(vector<Data *> args) {
 	return new DataInteger(length);
 }
 
+// TODO
+// Do we need a deep copy...  I mean... 
+// starting to feel dicey
+Data *fn_list_reverse(vector<Data *> args) {
+	auto i = args.begin();
+
+	DataList *source_ptr = dynamic_cast<DataList *>(*i);
+	list<Data *> source = source_ptr->getData();	
+
+	list<Data *> output;
+
+	for(auto j = source.begin(); j != source.end(); j++) {
+		Data *current = *j;	
+		output.push_front(current);
+	}
+	
+	return new DataList(output);
+}
+
+
+	
+
 // Greater than or equal to	
 Data *fn_geq(vector<Data *> args) {
 	auto i = args.begin();
@@ -607,8 +629,8 @@ Data *fn_map(vector<Data *> args) {
 	}
 	
 	return new DataList(output);
-	
 }
+
 Data *fn_and(vector<Data *> args) {
 
 	DataBool *ret;
@@ -698,6 +720,7 @@ int main(void) {
 	defined_vars["cons"] = new DataFunction(fn_cons);
 	defined_vars["rest"] = new DataFunction(fn_rest);
 	defined_vars["length"] = new DataFunction(fn_list_length);
+	defined_vars["reverse"] = new DataFunction(fn_list_reverse);
 	defined_vars["build_list"] = new DataFunction(fn_build_list);
 	defined_vars["filter"] = new DataFunction(fn_filter);
 	defined_vars["map"] = new DataFunction(fn_map);

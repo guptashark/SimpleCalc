@@ -380,6 +380,23 @@ Data *fn_sub(vector<Data *> args) {
 	return ret;
 }
 
+Data *fn_div(vector<Data *> args) {
+	int answer = 0;
+	auto i = args.begin();
+	
+	DataInteger *current = dynamic_cast<DataInteger *>(*i);
+	answer = current->getData();
+
+	i++;
+
+	current = dynamic_cast<DataInteger *>(*i);
+	answer = answer / current->getData();
+		
+
+	DataInteger *ret = new DataInteger(answer);
+	return ret;
+}
+
 Data *fn_sqr(vector<Data *> args) {
 	int answer = 0;
 	auto i = args.begin();
@@ -544,8 +561,12 @@ Data *fn_filter(vector<Data *> args) {
 	}
 	
 	return new DataList(output);
-	
 }
+
+
+
+// foldr is a really weird one I don't yet want to do. 
+// or mayme am unsure of how to do
 
 Data *fn_map(vector<Data *> args) {
 	auto i = args.begin();
@@ -646,6 +667,7 @@ int main(void) {
 	defined_vars["*"] = new DataFunction(fn_mult);
 	defined_vars["+"] = new DataFunction(fn_add);
 	defined_vars["-"] = new DataFunction(fn_sub);
+	defined_vars["/"] = new DataFunction(fn_div);
 
 	defined_vars["even?"] = new DataFunction(fn_even_q);
 

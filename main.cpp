@@ -631,6 +631,17 @@ Data *fn_map(vector<Data *> args) {
 	return new DataList(output);
 }
 
+Data *fn_not(vector<Data *> args) {
+	auto i= args.begin();
+
+	DataBool *src = dynamic_cast<DataBool *>(*i);
+	if(src->getData()) {
+		return new DataBool(false);
+	} else {
+		return new DataBool(true);
+	}
+}
+
 Data *fn_and(vector<Data *> args) {
 
 	DataBool *ret;
@@ -648,6 +659,7 @@ Data *fn_and(vector<Data *> args) {
 	ret = new DataBool(true);
 	return ret;
 }
+
 
 
 Data *fn_or(vector<Data *> args) {
@@ -730,6 +742,7 @@ int main(void) {
 	defined_vars[">"] = new DataFunction(fn_gt);
 	defined_vars["<"] = new DataFunction(fn_lt);
 
+	defined_vars["not"] = new DataFunction(fn_not);
 	defined_vars["and"] = new DataFunction(fn_and);
 	defined_vars["or"] = new DataFunction(fn_or);
 

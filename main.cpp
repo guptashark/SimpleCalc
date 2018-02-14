@@ -631,6 +631,28 @@ Data *fn_map(vector<Data *> args) {
 	return new DataList(output);
 }
 
+Data *predicate_string(vector<Data *> args) {
+	auto i = args.begin();
+
+	if((*i)->getType() == "string") {
+		return new DataBool(true);
+	} else {
+		return new DataBool(false);
+	}
+}
+
+Data *predicate_list(vector<Data *> args) {
+	auto i = args.begin();
+
+	if((*i)->getType() == "list") {
+		return new DataBool(true);
+	} else {
+		return new DataBool(false);
+	}
+}
+
+
+
 Data *fn_not(vector<Data *> args) {
 	auto i= args.begin();
 
@@ -698,7 +720,6 @@ Data *fn_if(vector<Data *> args) {
 }
 
 
-
 void show_help(map<string, int (*)(int, int)> &f) {
 	cout << endl;
 	cout << "Simple Calc Help" << endl;
@@ -726,6 +747,8 @@ int main(void) {
 	defined_vars["remainder"] = new DataFunction(fn_remainder);
 
 	defined_vars["even?"] = new DataFunction(fn_even_q);
+	defined_vars["string?"] = new DataFunction(predicate_string);
+	defined_vars["list?"] = new DataFunction(predicate_list);
 
 	defined_vars["sqr"] = new DataFunction(fn_sqr);
 	

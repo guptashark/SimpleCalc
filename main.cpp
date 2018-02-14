@@ -547,6 +547,26 @@ Data *fn_filter(vector<Data *> args) {
 	
 }
 
+Data *fn_map(vector<Data *> args) {
+	auto i = args.begin();
+	DataFunction *f = dynamic_cast<DataFunction *>(*i);
+	i++;
+
+	DataList *source_ptr = dynamic_cast<DataList *>(*i);
+	list<Data *> source = source_ptr->getData();	
+
+	list<Data *> output;
+
+	for(auto j = source.begin(); j != source.end(); j++) {
+		Data *current = *j;	
+		vector<Data *> f_args = {current};
+		Data *image = f->apply(f_args);
+		output.push_back(image);
+	}
+	
+	return new DataList(output);
+	
+}
 Data *fn_and(vector<Data *> args) {
 
 	DataBool *ret;
@@ -635,6 +655,7 @@ int main(void) {
 	defined_vars["rest"] = new DataFunction(fn_rest);
 	defined_vars["build_list"] = new DataFunction(fn_build_list);
 	defined_vars["filter"] = new DataFunction(fn_filter);
+	defined_vars["map"] = new DataFunction(fn_map);
 
 	defined_vars[">="] = new DataFunction(fn_geq);	
 	defined_vars["<="] = new DataFunction(fn_leq);

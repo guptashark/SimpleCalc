@@ -631,6 +631,19 @@ Data *fn_map(vector<Data *> args) {
 	return new DataList(output);
 }
 
+Data *fn_list_empty(vector<Data *> args) {
+	auto i = args.begin();
+	DataList *l_ptr = dynamic_cast<DataList *>(*i);
+
+	unsigned int len = l_ptr->getData().size();
+
+	if(len == 0) {
+		return new DataBool(true);
+	} else {
+		return new DataBool(false);
+	}
+}
+
 Data *predicate_string(vector<Data *> args) {
 	auto i = args.begin();
 
@@ -651,6 +664,15 @@ Data *predicate_list(vector<Data *> args) {
 	}
 }
 
+Data *predicate_bool(vector<Data *> args) {
+	auto i = args.begin();
+
+	if((*i)->getType() == "bool") {
+		return new DataBool(true);
+	} else {
+		return new DataBool(false);
+	}
+}
 
 
 Data *fn_not(vector<Data *> args) {
@@ -749,12 +771,14 @@ int main(void) {
 	defined_vars["even?"] = new DataFunction(fn_even_q);
 	defined_vars["string?"] = new DataFunction(predicate_string);
 	defined_vars["list?"] = new DataFunction(predicate_list);
+	defined_vars["bool?"] = new DataFunction(predicate_bool);
 
 	defined_vars["sqr"] = new DataFunction(fn_sqr);
 	
 	defined_vars["cons"] = new DataFunction(fn_cons);
 	defined_vars["rest"] = new DataFunction(fn_rest);
 	defined_vars["length"] = new DataFunction(fn_list_length);
+	defined_vars["empty?"] = new DataFunction(fn_list_empty);
 	defined_vars["reverse"] = new DataFunction(fn_list_reverse);
 	defined_vars["build_list"] = new DataFunction(fn_build_list);
 	defined_vars["filter"] = new DataFunction(fn_filter);

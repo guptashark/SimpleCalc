@@ -170,6 +170,23 @@ class DataNull : public Data {
 		
 };
 
+
+string 
+generate_type_error(
+	string fn_name, 
+	string expected_type,
+	string given_literal) 
+{
+	string err;
+	
+	err += " " + fn_name + ": contract violation\n";
+	err += "\texpected: " + expected_type + "\n";
+	err += "\tgiven: " + given_literal + "\n";
+	return err;	
+}
+
+
+
 map<string, Data *> defined_vars;
 
 class ParseTreeNode {
@@ -312,6 +329,7 @@ generate_tree(vector<string> &token_list) {
 
 // not really necessary at this time... 
 // we can focus on implementing it later. 
+
 void
 tokenize_input(stringstream &input, vector<string> &tokens) {
 
@@ -420,6 +438,8 @@ Data *fn_sqr(vector<Data *> args) {
 	return new DataInteger(answer);
 }
 
+
+
 Data *fn_even_q(vector<Data *> args) {
 	auto i = args.begin();
 	
@@ -489,9 +509,23 @@ Data *fn_list_reverse(vector<Data *> args) {
 // Greater than or equal to	
 Data *fn_geq(vector<Data *> args) {
 	auto i = args.begin();
+	
+	if((*i)->getType() != "integer") {
+		throw generate_type_error(">=", "integer", (*i)->getType());
+	}
+
 	DataInteger *first = dynamic_cast<DataInteger *>(*i);
 	i++;
+
+	if((*i)->getType() != "integer") {
+		throw generate_type_error(">=", "integer", (*i)->getType());
+	}
+
 	DataInteger *second = dynamic_cast<DataInteger *>(*i);
+
+	cout << "in geq... " << endl;
+	cout << first->getType() << endl;
+
 	int f = first->getData();
 	int s = second->getData();
 
@@ -649,7 +683,6 @@ Data *fn_string_copy(vector<Data *> args) {
 	k += s->getData();
 	k += "\"";	
 	return new DataString(k)	;
-
 }
 
 Data *fn_list_empty(vector<Data *> args) {
@@ -857,11 +890,17 @@ int main(void) {
 		// the user must produce a bracketed expr. 
 
 		PTN_Function *command = generate_tree(token_list);
-		
-		Data *to_print = command->args[0]->process_node();
+		Data *to_print;
+		try {
+			to_print = command->args[0]->process_node();
+			cout << to_print->to_str() << endl;
+		}
+
+		catch (string err) {
+			cout << err << endl;
+		}
+
 		//cout << command->args[0]->process_node() << endl;
-		cout << to_print->to_str() << endl;
-		cout << to_print->getType() << endl;
 		// no error recovery - yet
 	}
 

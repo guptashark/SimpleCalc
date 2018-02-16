@@ -84,6 +84,10 @@ class DataString : public Data {
 
 		string getType() { return type; };
 
+		string getData() {
+			return s;
+		}
+
 };
 
 class DataList : public  Data {
@@ -310,15 +314,10 @@ generate_tree(vector<string> &token_list) {
 // we can focus on implementing it later. 
 void
 tokenize_input(stringstream &input, vector<string> &tokens) {
-	
-	// all we need to do is parse the input and 
-	// recognize tokens to put into the vector. 
-	// mainly... brackets. 
 
 	(void)input;
 	(void)tokens;
 
-	
 }
 
 
@@ -566,6 +565,8 @@ Data *fn_lt(vector<Data *> args) {
 	return ret;
 }
 
+
+
 Data *fn_build_list(vector<Data *> args) {
 	auto i = args.begin();
 	DataInteger *num_elements = dynamic_cast<DataInteger *>(*i);	
@@ -631,6 +632,26 @@ Data *fn_map(vector<Data *> args) {
 	return new DataList(output);
 }
 
+// String functions
+Data *fn_string_length(vector<Data *> args) {
+	auto i = args.begin();
+	DataString *s = dynamic_cast<DataString *>(*i);
+	unsigned int my_len = s->getData().size();
+	return new DataInteger(my_len);
+
+}
+
+Data *fn_string_copy(vector<Data *> args) {
+	auto i = args.begin();
+	DataString *s = dynamic_cast<DataString *>(*i);
+	
+	string k = "\"";
+	k += s->getData();
+	k += "\"";	
+	return new DataString(k)	;
+
+}
+
 Data *fn_list_empty(vector<Data *> args) {
 	auto i = args.begin();
 	DataList *l_ptr = dynamic_cast<DataList *>(*i);
@@ -643,6 +664,7 @@ Data *fn_list_empty(vector<Data *> args) {
 		return new DataBool(false);
 	}
 }
+
 
 Data *predicate_string(vector<Data *> args) {
 	auto i = args.begin();
@@ -767,6 +789,9 @@ int main(void) {
 	defined_vars["-"] = new DataFunction(fn_sub);
 	defined_vars["/"] = new DataFunction(fn_div);
 	defined_vars["remainder"] = new DataFunction(fn_remainder);
+
+	defined_vars["string-length"] = new DataFunction(fn_string_length);
+	defined_vars["string-copy"] = new DataFunction(fn_string_copy);
 
 	defined_vars["even?"] = new DataFunction(fn_even_q);
 	defined_vars["string?"] = new DataFunction(predicate_string);

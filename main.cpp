@@ -359,7 +359,7 @@ Data *fn_mult(vector<Data *> args) {
 	
 		// we ensure that all args are ints
 		if((*i)->getType() != "integer") {
-			cout << "BAD type! Expected Ints!" << endl;
+			throw generate_type_error("*", "integer", (*i)->getType());
 		}
 
 		DataInteger *current = dynamic_cast<DataInteger *>(*i);
@@ -379,7 +379,7 @@ Data *fn_add(vector<Data *> args) {
 	
 		// we ensure that all args are ints
 		if((*i)->getType() != "integer") {
-			cout << "BAD type! Expected Ints!" << endl;
+			throw generate_type_error("+", "integer", (*i)->getType());
 		}
 
 		DataInteger *current = dynamic_cast<DataInteger *>(*i);

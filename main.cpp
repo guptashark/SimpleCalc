@@ -406,9 +406,10 @@ Data *fn_sub(vector<Data *> args) {
 	answer = current->getData();
 
 	i++;
-
-	current = dynamic_cast<DataInteger *>(*i);
-	answer = answer - current->getData();
+	for(;i != args.end(); i++) {
+		current = dynamic_cast<DataInteger *>(*i);
+		answer = answer - current->getData();
+	}
 
 	DataInteger *ret = new DataInteger(answer);
 	return ret;

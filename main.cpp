@@ -8,6 +8,18 @@
 
 using namespace std;
 
+// We need an alternate computation model... 
+// lol. Especially to supplement functions... 
+// so that they know what they're dealing with... 
+// and we shouldn't be computing so early on...
+
+// ie, "and" should not get all of its args 
+// previously computed. It should do the 
+// computation itself, saving time by not 
+// executing later args if posisble. 
+
+// but this model works for now... so... lol. 
+
 // this is dumb, 
 // it's not recognizing type as a 
 // base class member... wtf. 
@@ -617,7 +629,6 @@ Data *fn_lt(vector<Data *> args) {
 
 	DataInteger *second = dynamic_cast<DataInteger *>(*i);
 
-
 	int f = first->getData();
 	int s = second->getData();
 
@@ -797,8 +808,13 @@ Data *fn_or(vector<Data *> args) {
 
 	DataBool *ret;
 	auto i = args.begin();
+
+		
 	
 	while(i != args.end()) {
+		if((*i)->getType() != "bool") {
+			throw generate_type_error("or", "bool", (*i)->getType());
+		}
 		DataBool *current = dynamic_cast<DataBool *>(*i);
 		if(current->getData() == true) {
 			ret = new DataBool(true);

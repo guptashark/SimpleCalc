@@ -397,7 +397,7 @@ Data *fn_sub(vector<Data *> args) {
 	auto i = args.begin();
 
 	if(args.size() < 1) {
-		throw string("not enough args");
+		throw string("arity mismatch");
 	}
 
 	if((*i)->getType() != "integer") {
@@ -425,6 +425,10 @@ Data *fn_sub(vector<Data *> args) {
 Data *fn_div(vector<Data *> args) {
 	int answer = 0;
 	auto i = args.begin();
+
+	if(args.size() == 0) {
+		throw string("arity mismatch");
+	}
 	
 	DataInteger *current = dynamic_cast<DataInteger *>(*i);
 	answer = current->getData();

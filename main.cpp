@@ -395,6 +395,12 @@ Data *fn_add(vector<Data *> args) {
 Data *fn_sub(vector<Data *> args) {
 	int answer = 0;
 	auto i = args.begin();
+
+	if(args.size() < 1) {
+		throw string("not enough args");
+	}
+
+
 	
 	DataInteger *current = dynamic_cast<DataInteger *>(*i);
 	answer = current->getData();

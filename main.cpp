@@ -559,7 +559,7 @@ Data *fn_leq(vector<Data *> args) {
 	int s = second->getData();
 
 	bool val;
-	if(f >= s) {
+	if(f <= s) {
 		val = true;
 	} else {
 		val = false;
@@ -569,11 +569,24 @@ Data *fn_leq(vector<Data *> args) {
 	return ret;
 }
 
+
 Data *fn_gt(vector<Data *> args) {
 	auto i = args.begin();
+	
+	if((*i)->getType() != "integer") {
+		throw generate_type_error(">=", "integer", (*i)->getType());
+	}
+
 	DataInteger *first = dynamic_cast<DataInteger *>(*i);
 	i++;
+
+	if((*i)->getType() != "integer") {
+		throw generate_type_error(">=", "integer", (*i)->getType());
+	}
+
 	DataInteger *second = dynamic_cast<DataInteger *>(*i);
+
+
 	int f = first->getData();
 	int s = second->getData();
 
@@ -590,9 +603,21 @@ Data *fn_gt(vector<Data *> args) {
 
 Data *fn_lt(vector<Data *> args) {
 	auto i = args.begin();
+	
+	if((*i)->getType() != "integer") {
+		throw generate_type_error(">=", "integer", (*i)->getType());
+	}
+
 	DataInteger *first = dynamic_cast<DataInteger *>(*i);
 	i++;
+
+	if((*i)->getType() != "integer") {
+		throw generate_type_error(">=", "integer", (*i)->getType());
+	}
+
 	DataInteger *second = dynamic_cast<DataInteger *>(*i);
+
+
 	int f = first->getData();
 	int s = second->getData();
 
@@ -606,7 +631,6 @@ Data *fn_lt(vector<Data *> args) {
 	DataBool *ret = new DataBool(val);	
 	return ret;
 }
-
 
 
 Data *fn_build_list(vector<Data *> args) {

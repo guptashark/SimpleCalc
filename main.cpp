@@ -400,13 +400,20 @@ Data *fn_sub(vector<Data *> args) {
 		throw string("not enough args");
 	}
 
-
-	
+	if((*i)->getType() != "integer") {
+		throw generate_type_error("-", "integer", (*i)->getType());
+	}
+		
 	DataInteger *current = dynamic_cast<DataInteger *>(*i);
 	answer = current->getData();
 
 	i++;
 	for(;i != args.end(); i++) {
+
+		if((*i)->getType() != "integer") {
+			throw generate_type_error("-", "integer", (*i)->getType());
+		}
+
 		current = dynamic_cast<DataInteger *>(*i);
 		answer = answer - current->getData();
 	}

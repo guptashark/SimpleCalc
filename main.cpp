@@ -790,6 +790,9 @@ Data *fn_and(vector<Data *> args) {
 	auto i = args.begin();
 	
 	while(i != args.end()) {
+		if((*i)->getType() != "bool") {
+			throw generate_type_error("and", "bool", (*i)->getType());
+		}
 		DataBool *current = dynamic_cast<DataBool *>(*i);
 		if(current->getData() == false) {
 			ret = new DataBool(false);
@@ -808,8 +811,6 @@ Data *fn_or(vector<Data *> args) {
 
 	DataBool *ret;
 	auto i = args.begin();
-
-		
 	
 	while(i != args.end()) {
 		if((*i)->getType() != "bool") {

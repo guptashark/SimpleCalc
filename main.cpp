@@ -197,6 +197,18 @@ generate_type_error(
 	return err;	
 }
 
+string 
+generate_arity_error(
+	string fn_name,
+	string expected,
+	string given)
+{
+	string err;
+	err += " " + fn_name + ": arity mismatch\n";
+	err += "\texpected: " + expected + "\n";
+	err += "\tgiven: " + given + "\n";
+	return err;
+}
 
 
 map<string, Data *> defined_vars;

@@ -79,13 +79,7 @@ class DataString : public Data {
 		string s;
 		
 	public:
-		DataString(string t): type("string") {
-			unsigned int i = 1;
-			while(i < t.length() - 1) {
-				s.push_back(t[i]);
-				i++;
-			}
-		}
+		DataString(string t): type("string"), s(t) {};
 
 		string to_str() {
 			string ret = "\"";
@@ -239,7 +233,7 @@ class PTN_Literal: public ParseTreeNode {
 			return defined_vars[lexeme];
 		} else {
 			if((lexeme[0] == '"') && (lexeme[lexeme.size() - 1] == '"')) {
-				return (new DataString(lexeme));
+				return (new DataString(lexeme.substr(1, lexeme.size() - 2)));
 			} 
 			//cout << lexeme[0] << " " << lexeme[lexeme.size() - 1] << endl;
 
@@ -741,6 +735,9 @@ Data *fn_map(vector<Data *> args) {
 
 // String functions
 Data *fn_string_length(vector<Data *> args) {
+	if(args.size() != 1) {
+		throw generate_arity_error("string-length", "1", to_string(args.size()));
+	}
 	auto i = args.begin();
 	DataString *s = dynamic_cast<DataString *>(*i);
 	unsigned int my_len = s->getData().size();

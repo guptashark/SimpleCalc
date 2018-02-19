@@ -759,6 +759,9 @@ Data *fn_string_copy(vector<Data *> args) {
 }
 
 Data *fn_list_empty(vector<Data *> args) {
+	if(args.size() != 1) {
+		throw generate_arity_error("empty?", "1", to_string(args.size()));
+	}
 	auto i = args.begin();
 	DataList *l_ptr = dynamic_cast<DataList *>(*i);
 
@@ -773,6 +776,9 @@ Data *fn_list_empty(vector<Data *> args) {
 
 
 Data *predicate_string(vector<Data *> args) {
+	if(args.size() != 1) {
+		throw generate_arity_error("string?", "1", to_string(args.size()));
+	}
 	auto i = args.begin();
 
 	if((*i)->getType() == "string") {
@@ -783,6 +789,10 @@ Data *predicate_string(vector<Data *> args) {
 }
 
 Data *predicate_list(vector<Data *> args) {
+	if(args.size() != 1) {
+		throw generate_arity_error("list?", "1", to_string(args.size()));
+	}
+
 	auto i = args.begin();
 
 	if((*i)->getType() == "list") {
@@ -793,6 +803,9 @@ Data *predicate_list(vector<Data *> args) {
 }
 
 Data *predicate_bool(vector<Data *> args) {
+	if(args.size() != 1) {
+		throw generate_arity_error("bool?", "1", to_string(args.size()));
+	}
 	auto i = args.begin();
 
 	if((*i)->getType() == "bool") {
@@ -804,7 +817,14 @@ Data *predicate_bool(vector<Data *> args) {
 
 
 Data *fn_not(vector<Data *> args) {
+	if(args.size() != 1) {
+		throw generate_arity_error("not", "1", to_string(args.size()));
+	}
 	auto i= args.begin();
+	if((*i)->getType() != "bool") {
+		throw generate_type_error("not", "bool", (*i)->getType());
+	}
+
 
 	DataBool *src = dynamic_cast<DataBool *>(*i);
 	if(src->getData()) {
@@ -905,7 +925,6 @@ Data *fn_if(vector<Data *> args) {
 	Data *first = *i;
 	i++;
 	Data *second = *i;
-
 	
 	if(condition->getData()) {
 		return first;

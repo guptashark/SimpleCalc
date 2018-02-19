@@ -894,11 +894,12 @@ Data *fn_nor(vector<Data *> args) {
 	return fn_not({new DataBool(false)});
 }
 
-	
-
 
 Data *fn_if(vector<Data *> args) {
 	auto i = args.begin();
+	if((*i)->getType() != "bool") {
+		throw generate_type_error("if", "bool", (*i)->getType());
+	}
 	DataBool *condition = dynamic_cast<DataBool *>(*i);
 	i++;
 	Data *first = *i;

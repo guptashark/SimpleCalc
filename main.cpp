@@ -846,6 +846,28 @@ Data *fn_or(vector<Data *> args) {
 	return ret;
 }
 
+Data *fn_nor(vector<Data *> args) {
+	DataBool *ret;
+	auto i = args.begin();
+	
+	while(i != args.end()) {
+		if((*i)->getType() != "bool") {
+			throw generate_type_error("or", "bool", (*i)->getType());
+		}
+
+		DataBool *current = dynamic_cast<DataBool *>(*i);
+		if(current->getData() == true) {
+			ret = new DataBool(true);
+			return ret;
+		}
+		i++;
+	}
+
+	return fn_not({new DataBool(false)});
+}
+
+	
+
 
 Data *fn_if(vector<Data *> args) {
 	auto i = args.begin();
@@ -917,6 +939,7 @@ int main(void) {
 	defined_vars["not"] = new DataFunction(fn_not);
 	defined_vars["and"] = new DataFunction(fn_and);
 	defined_vars["or"] = new DataFunction(fn_or);
+	defined_vars["nor"] = new DataFunction(fn_nor);
 
 
 	defined_vars["if"] = new DataFunction(fn_if);

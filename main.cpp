@@ -687,6 +687,7 @@ Data *fn_build_list(vector<Data *> args) {
 }
 
 Data *fn_filter(vector<Data *> args) {
+
 	auto i = args.begin();
 	DataFunction *f = dynamic_cast<DataFunction *>(*i);
 	i++;
@@ -707,13 +708,13 @@ Data *fn_filter(vector<Data *> args) {
 	
 	return new DataList(output);
 }
-
-
-
 // foldr is a really weird one I don't yet want to do. 
 // or mayme am unsure of how to do
 
 Data *fn_map(vector<Data *> args) {
+	if(args.size() != 2) {
+		throw generate_arity_error("map", "2", to_string(args.size()));
+	}
 	auto i = args.begin();
 	DataFunction *f = dynamic_cast<DataFunction *>(*i);
 	i++;
@@ -736,13 +737,12 @@ Data *fn_map(vector<Data *> args) {
 // String functions
 Data *fn_string_length(vector<Data *> args) {
 	if(args.size() != 1) {
-		throw generate_arity_error("string-length", "1", to_string(args.size()));
+		throw generate_arity_error("string-length","1",to_string(args.size()));
 	}
 	auto i = args.begin();
 	DataString *s = dynamic_cast<DataString *>(*i);
 	unsigned int my_len = s->getData().size();
 	return new DataInteger(my_len);
-
 }
 
 Data *fn_string_copy(vector<Data *> args) {

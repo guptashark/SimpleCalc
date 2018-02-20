@@ -749,10 +749,7 @@ Data *fn_string_copy(vector<Data *> args) {
 	auto i = args.begin();
 	DataString *s = dynamic_cast<DataString *>(*i);
 	
-	string k = "\"";
-	k += s->getData();
-	k += "\"";	
-	return new DataString(k)	;
+	return new DataString(s->getData())	;
 }
 
 Data *fn_list_empty(vector<Data *> args) {

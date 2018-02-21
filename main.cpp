@@ -23,6 +23,7 @@ using namespace std;
 // this is dumb, 
 // it's not recognizing type as a 
 // base class member... wtf. 
+
 class Data {
 public:	
 		// needs to be virtual
@@ -910,6 +911,9 @@ Data *fn_nor(vector<Data *> args) {
 
 
 Data *fn_if(vector<Data *> args) {
+	if(args.size() != 3 ) {
+		throw string("arity mismatch in \"if\"");
+	}
 	auto i = args.begin();
 	if((*i)->getType() != "bool") {
 		throw generate_type_error("if", "bool", (*i)->getType());
@@ -928,24 +932,6 @@ Data *fn_if(vector<Data *> args) {
 }
 
 
-void show_help(map<string, int (*)(int, int)> &f) {
-	cout << endl;
-	cout << "Simple Calc Help" << endl;
-	cout << "To quit, type in \"quit\"" << endl;
-	cout << "To view the help file, type in: \"help\"" << endl;
-	cout << "This calculator is a prefix expression calculator." << endl;
-	cout << "	Ex: * 3 4" << endl;
-	cout << "You can use any of the operations below in this syntax: " << endl;
-	cout << "These operations behave the same as in C." << endl;
-	cout << " 	oper arg1 arg2" << endl;
-	cout << endl;
-
-	for(auto i = f.begin(); i != f.end(); i++) {
-		cout << i->first << endl;
-	}
-	cout << endl;
-}
-	
 int main(void) {
 	/////////////////////////
 	defined_vars["*"] = new DataFunction(fn_mult);
@@ -990,10 +976,6 @@ int main(void) {
 	
 	cout << "Simple Calculator" << endl;
 	cout << "Version 1.0" << endl;
-
-	
-
-
 
 	while(true) {
 	

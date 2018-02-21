@@ -443,6 +443,9 @@ Data *fn_div(vector<Data *> args) {
 	i++;
 
 	current = dynamic_cast<DataInteger *>(*i);
+	if(current->getData() == 0) {
+		throw string("division by zero");
+	}
 	answer = answer / current->getData();
 		
 	DataInteger *ret = new DataInteger(answer);
